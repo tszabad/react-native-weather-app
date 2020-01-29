@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator,Text, TouchableOpacity, FlatList, Modal,
-  TouchableWithoutFeedback, Keyboard } from 'react-native';
+  TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
   import * as Location from 'expo-location';
   import * as Permissions from 'expo-permissions';
 
@@ -19,6 +19,8 @@ export default function Home({ navigation }) {
   const [weather, setWeather] = useState({});
   const [city, setCity] = useState([]);
   const [location, setLocation] = useState(null);
+  const [description, setDescription] =useState(null);
+  const [icon, setIcon] =useState(null);
   const [isloading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -26,17 +28,12 @@ export default function Home({ navigation }) {
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
-      
         setErrorMessage('Permission to access location was denied')
-     
     }
 
     let loc = await Location.getCurrentPositionAsync({});
-   
-    console.log(loc);
     
         const latitude = loc.coords.latitude;
-        console.log(lat);
         const longitude = loc.coords.longitude;
         
         fetch(
@@ -54,25 +51,18 @@ export default function Home({ navigation }) {
               setLocation(json.name);
               setWeather(json.main);
               setLoading(false);
-            //  description: json.weather[0].description,
-            //  icon: json.weather[0].icon
+              setDescription(json.weather[0].description),
+              setIcon(json.weather[0].icon)
              
-           
           })
           .catch(error => console.error(error));
-        
-      
-
-        
+     
   };
   
-    
-   
- 
   useEffect(() => {
     _getLocationAsync();
   
-  });
+  }, []);
   
 
   const addCity = (city) => {
@@ -96,12 +86,14 @@ export default function Home({ navigation }) {
         </View>}
     
     { !isloading &&<Card >
-            <Text style={globalStyles.titleText}> Your location:{location}</Text>
-            <Text style={globalStyles.titleText}>{ Math.round(weather.temp - 273.15) }  &#8451;</Text>
-            <Text style={globalStyles.paragraph}>{ weather.pressure } Pa</Text>
-            <Text style={globalStyles.paragraph}>{ weather.humidity } %</Text>
-            <Text style={globalStyles.paragraph}>{ Math.round(weather.temp_min - 273.15) }  &#8451;</Text>
-            <Text style={globalStyles.paragraph}>{ Math.round(weather.temp_max - 273.15) }  &#8451;</Text>
+            <Text style={globalStyles.titleText}> Your location is: {location}</Text>
+            <Text style={globalStyles.titleText}> <Image source={require("http://openweathermap.org/img/w/" + icon + ".png")} />  </Text>
+            <Text style={globalStyles.titleText}> { description } </Text>
+            <Text style={globalStyles.titleText}>Current temperature: { Math.round(weather.temp - 273.15) }  &#8451;</Text>
+            <Text style={globalStyles.paragraph}>Air Pressure: { weather.pressure } Pa</Text>
+            <Text style={globalStyles.paragraph}>Humidity: { weather.humidity } %</Text>
+            <Text style={globalStyles.paragraph}>Minimum temperature: { Math.round(weather.temp_min - 273.15) }  &#8451;</Text>
+            <Text style={globalStyles.paragraph}>Maximum temperature: { Math.round(weather.temp_max - 273.15) }  &#8451;</Text>
             
         
           </Card>}
@@ -119,17 +111,17 @@ export default function Home({ navigation }) {
         </TouchableWithoutFeedback>
       </Modal>
 
-      <MaterialIcons 
+      <Text>Add new city  <MaterialIcons 
         name='add' 
         size={24} 
         style={styles.modalToggle}
         onPress={() => setModalOpen(true)} 
-      />
+      /></Text>
 
      { city && <FlatList data={city} renderItem={({ item }) => (
         <TouchableOpacity onPress={() => navigation.navigate('CityDetails', item)}>
           <Card >
-            <Text style={globalStyles.titleText}>{ item.title }</Text>
+            <Text style={globalStyles.titleText}>{ item.title}</Text>
             
           </Card>
           <MaterialIcons 

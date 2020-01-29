@@ -1,30 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Text, Image } from 'react-native';
 import { globalStyles } from '../styles/global';
 import Card from '../shared/card';
 
-export default function CityDetails({ navigation, props }) {
+export default function CityDetails({ navigation }) {
   const currentCity = navigation.getParam('title');
-  const [city, setCity] =(currentCity);
   const [weather, setWeather] = useState({});
   const [description, setDescription] =useState(null);
   const [icon, setIcon] =useState(null);
+  const [isloading, setLoading] = useState(true);
 
   
   console.log(currentCity);
 
-  return(
-    <View>
-      <Text>{city}</Text>
-      
-    </View>
-  )
-}
-
+ 
 getweather = async => {
   fetch(
     "https://api.openweathermap.org/data/2.5/weather?q=" +
-      city +
+      currentCity +
       "&appid=2bf63b97329b9fab7d24bf66e160db11"
   )
      .then(response => {
@@ -44,12 +37,14 @@ getweather = async => {
   useEffect(() => {
     getweather();
 
-  }
-  );
+  }, []);
 
   console.log(weather);
   return (
     <View style={globalStyles.container}>
+    { isloading && <View style={{ flex: 1, padding: 20 }}>
+          <ActivityIndicator />
+        </View>}
       <Card>
         <Text style={globalStyles.titleText}>
           { currentCity }
@@ -64,7 +59,18 @@ getweather = async => {
         <Image source={"http://openweathermap.org/img/w/" + icon + ".png"} />
         </Text>
         
-      </Card>
+      </Card>{ !isloading &&<Card >
+            <Text style={globalStyles.titleText}> Your location is: {location}</Text>
+            <Text style={globalStyles.titleText}> <Image source={require("http://openweathermap.org/img/w/" + icon + ".png")} />  </Text>
+            <Text style={globalStyles.titleText}> { description } </Text>
+            <Text style={globalStyles.titleText}>Current temperature: { Math.round(weather.temp - 273.15) }  &#8451;</Text>
+            <Text style={globalStyles.paragraph}>Air Pressure: { weather.pressure } Pa</Text>
+            <Text style={globalStyles.paragraph}>Humidity: { weather.humidity } %</Text>
+            <Text style={globalStyles.paragraph}>Minimum temperature: { Math.round(weather.temp_min - 273.15) }  &#8451;</Text>
+            <Text style={globalStyles.paragraph}>Maximum temperature: { Math.round(weather.temp_max - 273.15) }  &#8451;</Text>
+          </Card>}
     </View>
   );
 
+
+}
