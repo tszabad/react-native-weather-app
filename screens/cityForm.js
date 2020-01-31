@@ -28,7 +28,7 @@ export default function CityForm({ addCity }) {
           <View>
           <TextInput
               style={globalStyles.input}
-              placeholder='City title'
+              placeholder='City name'
               onChangeText={props.handleChange('title')}
               onBlur={props.handleBlur('title')} 
               value={props.values.title}
@@ -37,7 +37,7 @@ export default function CityForm({ addCity }) {
             <Text style={globalStyles.errorText}>{props.touched.title && props.errors.title}</Text>
 
            
-            <Button color='maroon' title="Submit" onPress={props.handleSubmit} /> 
+            <Button color='blue' title="Submit" onPress={props.handleSubmit} /> 
           </View>
         )}
       </Formik>

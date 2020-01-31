@@ -4,15 +4,19 @@ export const globalStyles = StyleSheet.create({
   titleText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'white',
+    textAlign: 'center',
+    
   },
   paragraph: {
     marginVertical: 8,
     lineHeight: 20,
+    color: 'white',
   },
   container: {
     flex: 1,
     padding: 20,
+    
   },
   input: {
     borderWidth: 1,

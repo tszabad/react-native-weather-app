@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
     left: 16,
   },
   headerImage: {
-    width: 26,
-    height:26,
+    width: 38,
+    height:38,
     marginHorizontal:10,
 
   },

@@ -10,6 +10,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import Card from '../shared/card';
 import CityForm from './cityForm';
+import { withOrientation } from 'react-navigation';
+import getweather from '../shared/weather'
 
 export default function Home({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -52,13 +54,14 @@ export default function Home({ navigation }) {
               setWeather(json.main);
               setLoading(false);
               setDescription(json.weather[0].description),
-              setIcon(json.weather[0].icon)
+              setIcon(json.weather[0].icon);
+              console.log(json.weather[0])
              
           })
           .catch(error => console.error(error));
      
   };
-  
+  console.log(icon)
   useEffect(() => {
     _getLocationAsync();
   
@@ -86,10 +89,11 @@ export default function Home({ navigation }) {
         </View>}
     
     { !isloading &&<Card >
-            <Text style={globalStyles.titleText}> Your location is: {location}</Text>
-            <Text style={globalStyles.titleText}> <Image source={require("http://openweathermap.org/img/w/" + icon + ".png")} />  </Text>
+            <Text style={globalStyles.titleText}> {location}</Text>
+             <Image style={{width:75, height:75, alignSelf: 'center'}} 
+             source={{uri:'http://openweathermap.org/img/w/'+icon+'.png'}} />   
             <Text style={globalStyles.titleText}> { description } </Text>
-            <Text style={globalStyles.titleText}>Current temperature: { Math.round(weather.temp - 273.15) }  &#8451;</Text>
+            <Text style={globalStyles.titleText}>{ Math.round(weather.temp - 273.15) }  &#8451;</Text>
             <Text style={globalStyles.paragraph}>Air Pressure: { weather.pressure } Pa</Text>
             <Text style={globalStyles.paragraph}>Humidity: { weather.humidity } %</Text>
             <Text style={globalStyles.paragraph}>Minimum temperature: { Math.round(weather.temp_min - 273.15) }  &#8451;</Text>
@@ -111,18 +115,20 @@ export default function Home({ navigation }) {
         </TouchableWithoutFeedback>
       </Modal>
 
-      <Text>Add new city  <MaterialIcons 
+       <MaterialIcons 
         name='add' 
-        size={24} 
+        size={30} 
         style={styles.modalToggle}
         onPress={() => setModalOpen(true)} 
-      /></Text>
+      />
+     
 
      { city && <FlatList data={city} renderItem={({ item }) => (
         <TouchableOpacity onPress={() => navigation.navigate('CityDetails', item)}>
           <Card >
             <Text style={globalStyles.titleText}>{ item.title}</Text>
-            
+            <Text style={globalStyles.titleText}>{getweather(item.title).then(response => response)}</Text>
+           
           </Card>
           <MaterialIcons 
         name='delete' 
