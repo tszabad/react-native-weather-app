@@ -85,7 +85,7 @@ export default function Home({ navigation }) {
   return (
     <View style={globalStyles.container}>
     { isloading && <View style={{ flex: 1, padding: 20 }}>
-          <ActivityIndicator />
+          <ActivityIndicator size ="large"/>
         </View>}
     
     { !isloading &&<Card >
@@ -123,11 +123,11 @@ export default function Home({ navigation }) {
       />
      
 
-     { city && <FlatList data={city} renderItem={({ item }) => (
+     { city && <FlatList numColumns = {3} data={city} renderItem={({ item }) => (
         <TouchableOpacity onPress={() => navigation.navigate('CityDetails', item)}>
           <Card >
             <Text style={globalStyles.titleText}>{ item.title}</Text>
-            <Text style={globalStyles.titleText}>{getweather(item.title).then(response => response)}</Text>
+           
            
           </Card>
           <MaterialIcons 
@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
+    color:'red',
   },
   
 });

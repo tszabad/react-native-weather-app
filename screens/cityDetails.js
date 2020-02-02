@@ -45,7 +45,7 @@ getweather = async => {
   return (
     <View style={globalStyles.container}>
     { isloading && <View style={{ flex: 1, padding: 20 }}>
-          <ActivityIndicator />
+          <ActivityIndicator  size ="large"/>
         </View>}
       { !isloading &&<Card >
             <Text style={globalStyles.titleText}>  {currentCity}</Text>
