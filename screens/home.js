@@ -7,7 +7,6 @@ import { StyleSheet, View, ActivityIndicator,Text, TouchableOpacity, FlatList, M
 import { globalStyles } from '../styles/global';
 import { MaterialIcons } from '@expo/vector-icons';
 
-
 import Card from '../shared/card';
 import CityForm from './cityForm';
 import { withOrientation } from 'react-navigation';
@@ -16,8 +15,7 @@ import getweather from '../shared/weather'
 export default function Home({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
   
-  const [lat, setLat]  = useState("");
-  const [long, setLong]  = useState("");
+  
   const [weather, setWeather] = useState({});
   const [city, setCity] = useState([]);
   const [location, setLocation] = useState(null);
@@ -55,18 +53,17 @@ export default function Home({ navigation }) {
               setLoading(false);
               setDescription(json.weather[0].description),
               setIcon(json.weather[0].icon);
-              console.log(json.weather[0])
+              
              
           })
           .catch(error => console.error(error));
      
   };
-  console.log(icon)
+  
   useEffect(() => {
     _getLocationAsync();
   
   }, []);
-  
 
   const addCity = (city) => {
     city.key = Math.random().toString();
@@ -115,14 +112,6 @@ export default function Home({ navigation }) {
         </TouchableWithoutFeedback>
       </Modal>
 
-       <MaterialIcons 
-        name='add' 
-        size={30} 
-        style={styles.modalToggle}
-        onPress={() => setModalOpen(true)} 
-      />
-     
-
      { city && <FlatList numColumns = {3} data={city} renderItem={({ item }) => (
         <TouchableOpacity onPress={() => navigation.navigate('CityDetails', item)}>
           <Card >
@@ -139,6 +128,13 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
         
       )} />}
+
+      <MaterialIcons 
+        name='add' 
+        size={30} 
+        style={styles.modalToggle}
+        onPress={() => setModalOpen(true)} 
+      />
      
     </View>
   );
@@ -153,7 +149,7 @@ const styles = StyleSheet.create({
     borderColor: '#f2f2f2',
     padding: 10,
     borderRadius: 10,
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
   },
   modalClose: {
     marginTop: 20,
